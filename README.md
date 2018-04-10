@@ -39,8 +39,8 @@ panic(err)
 此类方法只返回一个chan，存放着一个map。error则为map["error"]
 例如:
 ```go
-api := cqhttp_go_sdk.Api("http://localhost:9002", "abcd")
-c := api.ConcurrentSendPrivateMsg(1034236490, "dd", false)
+api := cqhttp_go_sdk.Api("http://localhost:5700", "xxxx")
+c := api.ConcurrentSendPrivateMsg(23456789, "msg", false)
 m := <-c
 err := m["error"]
 if err != nil {
@@ -53,3 +53,11 @@ panic(err)
 那么你同时发送5条信息，最后一条甚至要2秒之后才会开始发送
 对于一些业务，响应时间长会造成用户体验极差
 而得益于go强大的并发能力，如果是并发版本，5条信息几乎是同时发送的。
+
+## CQ码
+```go
+import "github.com/juzi5201314/cqhttp_go_sdk/cq"
+...
+cq.At(123456789)//返回一个字符串[CQ:at,qq=123456789]
+```
+更多cq码请参考[https://d.cqp.me/Pro/CQ码]
