@@ -25,7 +25,9 @@ import "github.com/juzi5201314/cqhttp_go_sdk"
 func main(){
 api := cqhttp_go_sdk.Api("http://localhost:5700", "xxxx")
 m, err :=api.SendPrivateMsg(123456789, "233", false)
-
+if err != nil {
+panic(err)
+}
 ...
 }
 ```
@@ -35,3 +37,19 @@ m, err :=api.SendPrivateMsg(123456789, "233", false)
 
 所有方法均有并发版本(函数名字前添加Concurrent)，如:ConcurrentSendPrivateMsg
 此类方法只返回一个chan，存放着一个map。error则为map["error"]
+例如:
+```go
+api := cqhttp_go_sdk.Api("http://localhost:9002", "abcd")
+c := api.ConcurrentSendPrivateMsg(1034236490, "dd", false)
+m := <-c
+err := m["error"]
+if err != nil {
+panic(err)
+}
+```
+这个有什么用?
+假设你代码跟qq机器人不是同一个服务器而延迟200ms
+意味着加上处理消息的时间，发送到收到响应信息需要500ms
+那么你同时发送5条信息，最后一条甚至要2秒之后才会开始发送
+对于一些业务，响应时间长会造成用户体验极差
+而得益于go强大的并发能力，如果是并发版本，5条信息几乎是同时发送的。
