@@ -33,4 +33,5 @@ m, err :=api.SendPrivateMsg(123456789, "233", false)
 参数顺序也基本一样(如果不一样，那就是我写错了)。
 所有方法返回值都为一个map，结构与http插件响应的json相同。
 
-所有方法均有
+所有方法均有并发版本(函数名字前添加Concurrent)，如:ConcurrentSendPrivateMsg
+此类方法只返回一个chan，存放着一个map。error则为map["error"]
