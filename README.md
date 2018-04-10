@@ -8,3 +8,29 @@
 ```bash
 go get -u github.com/juzi5201314/cqhttp-go-sdk
 ```
+## 使用
+```go
+import "github.com/juzi5201314/cqhttp_go_sdk"
+
+...
+
+api := cqhttp_go_sdk.Api(url, token)
+```
+例如给 123456789 发送消息 233
+```go
+package main
+
+import "github.com/juzi5201314/cqhttp_go_sdk"
+
+func main(){
+api := cqhttp_go_sdk.Api("http://localhost:5700", "xxxx")
+m, err :=api.SendPrivateMsg(123456789, "233", false)
+
+...
+}
+```
+所有方法名字与http插件api文档中的一样，格式改为驼峰命名。
+参数顺序也基本一样(如果不一样，那就是我写错了)。
+所有方法返回值都为一个map，结构与http插件响应的json相同。
+
+所有方法均有
