@@ -85,5 +85,17 @@ return map[string]interface{}{
 "reply": "这是一条自动回复消息",
 }
 }
+
+/**
+更多监听事件函数
+ListenGroupMessage
+ListenDiscussMessage
+ListenGroupUpload
+ListenGroupAdmin
+ListenGroupDecrease
+ListenGroupIncrease
+ListenFriendRequest
+ListenGroupRequest
+*/
 ```
 更多事件请看[cqhttp插件官方文档](https://cqhttp.cc/docs/3.4/#/Post)
