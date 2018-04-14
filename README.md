@@ -60,7 +60,15 @@ import "github.com/juzi5201314/cqhttp_go_sdk/cq"
 ...
 cq.At(123456789)//返回一个字符串[CQ:at,qq=123456789]
 ```
-更多cq码请参考[https://d.cqp.me/Pro/CQ码]
+更多cq码请参考[酷q官方CQ说明](https://d.cqp.me/Pro/CQ码)
 
 ## webserver
+...go
+import "github.com/juzi5201314/cqhttp_go_sdk/server"
+
+s := server.StartListenServer(5700, "/")
+//在5700端口
+s.ListenPrivateMessage(server.PrivateMessageListener(pm))
+s.Listen()
+...
 [r](https://cqhttp.cc/docs/3.4/#/Post)
