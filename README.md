@@ -61,3 +61,6 @@ import "github.com/juzi5201314/cqhttp_go_sdk/cq"
 cq.At(123456789)//返回一个字符串[CQ:at,qq=123456789]
 ```
 更多cq码请参考[https://d.cqp.me/Pro/CQ码]
+
+## webserver
+[r](https://cqhttp.cc/docs/3.4/#/Post)
