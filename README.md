@@ -63,12 +63,27 @@ cq.At(123456789)//返回一个字符串[CQ:at,qq=123456789]
 更多cq码请参考[酷q官方CQ说明](https://d.cqp.me/Pro/CQ码)
 
 ## webserver
-...go
+```go
 import "github.com/juzi5201314/cqhttp_go_sdk/server"
 
-s := server.StartListenServer(5700, "/")
-//在5700端口
-s.ListenPrivateMessage(server.PrivateMessageListener(pm))
-s.Listen()
 ...
-[r](https://cqhttp.cc/docs/3.4/#/Post)
+s := server.StartListenServer(5700, "/")
+//启动一个http server在5700端口
+
+s.ListenPrivateMessage(server.PrivateMessageListener(pm))
+//添加一个函数来监听私聊消息
+
+s.Listen()
+//开始监听，此函数使用之后将会阻塞
+...
+
+//函数参数与cqhttp插件文档的顺序一样，如下。
+//返回的map为响应数据，如返回nil或者空map表示不响应
+func pm(sub_type string, message_id float64, user_id float64, message string, font float64) map[string]interface{} {
+println("收到消息"+message+"，类型为"+sub_type)
+return map[string]interface{}{
+"reply": "这是一条自动回复消息",
+}
+}
+```
+更多事件请看[cqhttp插件官方文档](https://cqhttp.cc/docs/3.4/#/Post)
