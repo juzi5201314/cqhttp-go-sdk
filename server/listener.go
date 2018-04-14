@@ -1,7 +1,7 @@
 package server
 
 type PrivateMessageListener func(string, float64, float64, string, float64) map[string]interface{}
-type GroupMessageListener func(string, float64, float64, float64, string, float64, string, string) map[string]interface{}
+type GroupMessageListener func(string, float64, float64, float64, string, string, string, float64) map[string]interface{}
 type DiscussMessageListener func(float64, float64, float64, string, float64) map[string]interface{}
 
 type GroupUploadListener func(float64, float64, map[string]interface{}) map[string]interface{}
@@ -30,7 +30,7 @@ func (el *EventListener) onMessage(m map[string]interface{}) map[string]interfac
 		return el.private_message(m["sub_type"].(string), m["message_id"].(float64), m["user_id"].(float64), m["message"].(string), m["font"].(float64))
 		break
 	case "grouop":
-		return el.group_message(m["sub_type"].(string), m["message_id"].(float64), m["group_id"].(float64), m["user_id"].(float64), m["message"].(string), m["font"].(float64), m["anonymous"].(string), m["anonymous_flag"].(string))
+		return el.group_message(m["sub_type"].(string), m["message_id"].(float64), m["group_id"].(float64), m["user_id"].(float64), m["anonymous"].(string), m["anonymous_flag"].(string), m["message"].(string), m["font"].(float64))
 	case "discuss":
 		return el.discuss_message(m["message_id"].(float64), m["discuss_id"].(float64), m["user_id"].(float64), m["message"].(string), m["font"].(float64))
 	}
