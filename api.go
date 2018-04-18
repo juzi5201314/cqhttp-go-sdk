@@ -42,7 +42,7 @@ func (api *API) concurrentPost(path string, data map[string]interface{}, c chan<
 	c <- m
 }
 
-func (api *API) SendPrivateMsg(user_id int, message string, auto_escape bool) (map[string]interface{}, error) {
+func (api *API) SendPrivateMsg(user_id float64, message string, auto_escape bool) (map[string]interface{}, error) {
 	return api.post("/send_private_msg", map[string]interface{}{
 		"user_id":     user_id,
 		"message":     message,
@@ -50,7 +50,7 @@ func (api *API) SendPrivateMsg(user_id int, message string, auto_escape bool) (m
 	})
 }
 
-func (api *API) ConcurrentSendPrivateMsg(user_id int, message string, auto_escape bool) chan map[string]interface{} {
+func (api *API) ConcurrentSendPrivateMsg(user_id float64, message string, auto_escape bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/send_private_msg", map[string]interface{}{
 		"user_id":     user_id,
@@ -60,7 +60,7 @@ func (api *API) ConcurrentSendPrivateMsg(user_id int, message string, auto_escap
 	return c
 }
 
-func (api *API) SendGroupMsg(group_id int, message string, auto_escape bool) (map[string]interface{}, error) {
+func (api *API) SendGroupMsg(group_id float64, message string, auto_escape bool) (map[string]interface{}, error) {
 	return api.post("/send_group_msg", map[string]interface{}{
 		"group_id":    group_id,
 		"message":     message,
@@ -68,7 +68,7 @@ func (api *API) SendGroupMsg(group_id int, message string, auto_escape bool) (ma
 	})
 }
 
-func (api *API) ConcurrentSendGroupMsg(group_id int, message string, auto_escape bool) chan map[string]interface{} {
+func (api *API) ConcurrentSendGroupMsg(group_id float64, message string, auto_escape bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/send_group_msg", map[string]interface{}{
 		"group_id":    group_id,
@@ -78,7 +78,7 @@ func (api *API) ConcurrentSendGroupMsg(group_id int, message string, auto_escape
 	return c
 }
 
-func (api *API) SendDiscussMsg(discuss_id int, message string, auto_escape bool) (map[string]interface{}, error) {
+func (api *API) SendDiscussMsg(discuss_id float64, message string, auto_escape bool) (map[string]interface{}, error) {
 	return api.post("/send_discuss_msg", map[string]interface{}{
 		"discuss_id":  discuss_id,
 		"message":     message,
@@ -86,7 +86,7 @@ func (api *API) SendDiscussMsg(discuss_id int, message string, auto_escape bool)
 	})
 }
 
-func (api *API) ConcurrentSendDiscussMsg(discuss_id int, message string, auto_escape bool) chan map[string]interface{} {
+func (api *API) ConcurrentSendDiscussMsg(discuss_id float64, message string, auto_escape bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/send_discuss_msg", map[string]interface{}{
 		"discuss_id":  discuss_id,
@@ -96,13 +96,13 @@ func (api *API) ConcurrentSendDiscussMsg(discuss_id int, message string, auto_es
 	return c
 }
 
-func (api *API) DeleteMsg(message_id int) (map[string]interface{}, error) {
+func (api *API) DeleteMsg(message_id float64) (map[string]interface{}, error) {
 	return api.post("/delete_msg", map[string]interface{}{
 		"message_id": message_id,
 	})
 }
 
-func (api *API) ConcurrentDeleteMsg(message_id int) chan map[string]interface{} {
+func (api *API) ConcurrentDeleteMsg(message_id float64) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/delete_msg", map[string]interface{}{
 		"message_id": message_id,
@@ -110,14 +110,14 @@ func (api *API) ConcurrentDeleteMsg(message_id int) chan map[string]interface{} 
 	return c
 }
 
-func (api *API) SendLike(user_id int, times int) (map[string]interface{}, error) {
+func (api *API) SendLike(user_id float64, times int) (map[string]interface{}, error) {
 	return api.post("/send_like", map[string]interface{}{
 		"user_id": user_id,
 		"times":   times,
 	})
 }
 
-func (api *API) ConcurrentSendLike(user_id int, times int) chan map[string]interface{} {
+func (api *API) ConcurrentSendLike(user_id float64, times int) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/send_like", map[string]interface{}{
 		"user_id": user_id,
@@ -126,7 +126,7 @@ func (api *API) ConcurrentSendLike(user_id int, times int) chan map[string]inter
 	return c
 }
 
-func (api *API) SetGroupKick(group_id int, user_id int, reject_add_request bool) (map[string]interface{}, error) {
+func (api *API) SetGroupKick(group_id float64, user_id float64, reject_add_request bool) (map[string]interface{}, error) {
 	return api.post("/set_group_kick", map[string]interface{}{
 		"group_id":           group_id,
 		"user_id":            user_id,
@@ -134,7 +134,7 @@ func (api *API) SetGroupKick(group_id int, user_id int, reject_add_request bool)
 	})
 }
 
-func (api *API) ConcurrentSetGroupKick(group_id int, user_id int, reject_add_request bool) chan map[string]interface{} {
+func (api *API) ConcurrentSetGroupKick(group_id float64, user_id float64, reject_add_request bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_group_kick", map[string]interface{}{
 		"user_id":            user_id,
@@ -144,7 +144,7 @@ func (api *API) ConcurrentSetGroupKick(group_id int, user_id int, reject_add_req
 	return c
 }
 
-func (api *API) SetGroupBan(group_id int, user_id int, duration int) (map[string]interface{}, error) {
+func (api *API) SetGroupBan(group_id float64, user_id float64, duration int) (map[string]interface{}, error) {
 	return api.post("/set_group_ban", map[string]interface{}{
 		"user_id":  user_id,
 		"group_id": group_id,
@@ -152,7 +152,7 @@ func (api *API) SetGroupBan(group_id int, user_id int, duration int) (map[string
 	})
 }
 
-func (api *API) ConcurrentSetGroupBan(group_id int, user_id int, duration int) chan map[string]interface{} {
+func (api *API) ConcurrentSetGroupBan(group_id float64, user_id float64, duration int) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_group_ban", map[string]interface{}{
 		"user_id":  user_id,
@@ -162,7 +162,7 @@ func (api *API) ConcurrentSetGroupBan(group_id int, user_id int, duration int) c
 	return c
 }
 
-func (api *API) SetGroupAnonymousBan(group_id int, flag string, duration int) (map[string]interface{}, error) {
+func (api *API) SetGroupAnonymousBan(group_id float64, flag string, duration int) (map[string]interface{}, error) {
 	return api.post("/set_group_anonymous_ban", map[string]interface{}{
 		"group_id": group_id,
 		"flag":     flag,
@@ -170,7 +170,7 @@ func (api *API) SetGroupAnonymousBan(group_id int, flag string, duration int) (m
 	})
 }
 
-func (api *API) ConcurrentSetGroupAnonymousBan(group_id int, flag string, duration int) chan map[string]interface{} {
+func (api *API) ConcurrentSetGroupAnonymousBan(group_id float64, flag string, duration int) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_group_anonymous_ban", map[string]interface{}{
 		"group_id": group_id,
@@ -180,14 +180,14 @@ func (api *API) ConcurrentSetGroupAnonymousBan(group_id int, flag string, durati
 	return c
 }
 
-func (api *API) SetGroupWholeBan(group_id int, enable bool) (map[string]interface{}, error) {
+func (api *API) SetGroupWholeBan(group_id float64, enable bool) (map[string]interface{}, error) {
 	return api.post("/set_group_whole_ban", map[string]interface{}{
 		"group_id": group_id,
 		"enable":   enable,
 	})
 }
 
-func (api *API) ConcurrentSetGroupWholeBan(group_id int, enable bool) chan map[string]interface{} {
+func (api *API) ConcurrentSetGroupWholeBan(group_id float64, enable bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_group_whole_ban", map[string]interface{}{
 		"group_id": group_id,
@@ -196,7 +196,7 @@ func (api *API) ConcurrentSetGroupWholeBan(group_id int, enable bool) chan map[s
 	return c
 }
 
-func (api *API) SetGroupAdmin(group_id int, user_id int, enable bool) (map[string]interface{}, error) {
+func (api *API) SetGroupAdmin(group_id float64, user_id float64, enable bool) (map[string]interface{}, error) {
 	return api.post("/set_group_admin", map[string]interface{}{
 		"user_id":  user_id,
 		"group_id": group_id,
@@ -204,7 +204,7 @@ func (api *API) SetGroupAdmin(group_id int, user_id int, enable bool) (map[strin
 	})
 }
 
-func (api *API) ConcurrentSetGroupAdmin(group_id int, user_id int, enable bool) chan map[string]interface{} {
+func (api *API) ConcurrentSetGroupAdmin(group_id float64, user_id float64, enable bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_group_admin", map[string]interface{}{
 		"user_id":  user_id,
@@ -214,14 +214,14 @@ func (api *API) ConcurrentSetGroupAdmin(group_id int, user_id int, enable bool) 
 	return c
 }
 
-func (api *API) SetGroupAnonymous(group_id int, enable bool) (map[string]interface{}, error) {
+func (api *API) SetGroupAnonymous(group_id float64, enable bool) (map[string]interface{}, error) {
 	return api.post("/set_group_anonymous", map[string]interface{}{
 		"group_id": group_id,
 		"enable":   enable,
 	})
 }
 
-func (api *API) ConcurrentSetGroupAnonymous(group_id int, enable bool) chan map[string]interface{} {
+func (api *API) ConcurrentSetGroupAnonymous(group_id float64, enable bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_group_anonymous", map[string]interface{}{
 		"group_id": group_id,
@@ -230,7 +230,7 @@ func (api *API) ConcurrentSetGroupAnonymous(group_id int, enable bool) chan map[
 	return c
 }
 
-func (api *API) SetGroupCard(group_id int, user_id int, card string) (map[string]interface{}, error) {
+func (api *API) SetGroupCard(group_id float64, user_id float64, card string) (map[string]interface{}, error) {
 	return api.post("/set_group_card", map[string]interface{}{
 		"user_id":  user_id,
 		"group_id": group_id,
@@ -238,7 +238,7 @@ func (api *API) SetGroupCard(group_id int, user_id int, card string) (map[string
 	})
 }
 
-func (api *API) ConcurrentSetGroupCard(group_id int, user_id int, card string) chan map[string]interface{} {
+func (api *API) ConcurrentSetGroupCard(group_id float64, user_id float64, card string) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_group_card", map[string]interface{}{
 		"user_id":  user_id,
@@ -248,14 +248,14 @@ func (api *API) ConcurrentSetGroupCard(group_id int, user_id int, card string) c
 	return c
 }
 
-func (api *API) SetGroupLeave(group_id int, is_dismiss bool) (map[string]interface{}, error) {
+func (api *API) SetGroupLeave(group_id float64, is_dismiss bool) (map[string]interface{}, error) {
 	return api.post("/set_group_leave", map[string]interface{}{
 		"group_id":   group_id,
 		"is_dismiss": is_dismiss,
 	})
 }
 
-func (api *API) ConcurrentSetGroupLeave(group_id int, is_dismiss bool) chan map[string]interface{} {
+func (api *API) ConcurrentSetGroupLeave(group_id float64, is_dismiss bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_group_leave", map[string]interface{}{
 		"group_id":   group_id,
@@ -264,7 +264,7 @@ func (api *API) ConcurrentSetGroupLeave(group_id int, is_dismiss bool) chan map[
 	return c
 }
 
-func (api *API) SetGroupSpecialTitle(group_id int, user_id int, special_title string) (map[string]interface{}, error) {
+func (api *API) SetGroupSpecialTitle(group_id float64, user_id float64, special_title string) (map[string]interface{}, error) {
 	return api.post("/set_group_special_title", map[string]interface{}{
 		"user_id":       user_id,
 		"group_id":      group_id,
@@ -272,7 +272,7 @@ func (api *API) SetGroupSpecialTitle(group_id int, user_id int, special_title st
 	})
 }
 
-func (api *API) ConcurrentSetGroupSpecialTitle(group_id int, user_id int, special_title string) chan map[string]interface{} {
+func (api *API) ConcurrentSetGroupSpecialTitle(group_id float64, user_id float64, special_title string) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_group_special_title", map[string]interface{}{
 		"user_id":       user_id,
@@ -282,13 +282,13 @@ func (api *API) ConcurrentSetGroupSpecialTitle(group_id int, user_id int, specia
 	return c
 }
 
-func (api *API) SetDiscussLeave(discuss_id int) (map[string]interface{}, error) {
+func (api *API) SetDiscussLeave(discuss_id float64) (map[string]interface{}, error) {
 	return api.post("/set_discuss_leave", map[string]interface{}{
 		"discuss_id": discuss_id,
 	})
 }
 
-func (api *API) ConcurrentSetDiscussLeave(discuss_id int) chan map[string]interface{} {
+func (api *API) ConcurrentSetDiscussLeave(discuss_id float64) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/set_discuss_leave", map[string]interface{}{
 		"discuss_id": discuss_id,
@@ -351,7 +351,7 @@ func (api *API) GetStrangerInfo(user_id int, no_cache bool) (map[string]interfac
 	})
 }
 
-func (api *API) ConcurrentGetStrangerInfo(user_id int, no_cache bool) chan map[string]interface{} {
+func (api *API) ConcurrentGetStrangerInfo(user_id float64, no_cache bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/get_stranger_info", map[string]interface{}{
 		"user_id":  user_id,
@@ -370,7 +370,7 @@ func (api *API) ConcurrentGetGroupList() chan map[string]interface{} {
 	return c
 }
 
-func (api *API) GetGroupMemberInfo(group_id int, user_id int, no_cache bool) (map[string]interface{}, error) {
+func (api *API) GetGroupMemberInfo(group_id float64, user_id float64, no_cache bool) (map[string]interface{}, error) {
 	return api.post("/get_group_member_info", map[string]interface{}{
 		"group_id": group_id,
 		"user_id":  user_id,
@@ -378,7 +378,7 @@ func (api *API) GetGroupMemberInfo(group_id int, user_id int, no_cache bool) (ma
 	})
 }
 
-func (api *API) ConcurrentGetGroupMemberInfo(group_id int, user_id int, no_cache bool) chan map[string]interface{} {
+func (api *API) ConcurrentGetGroupMemberInfo(group_id float64, user_id float64, no_cache bool) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/get_group_member_info", map[string]interface{}{
 		"group_id": group_id,
@@ -388,13 +388,13 @@ func (api *API) ConcurrentGetGroupMemberInfo(group_id int, user_id int, no_cache
 	return c
 }
 
-func (api *API) GetGroupMemberList(group_id int) (map[string]interface{}, error) {
+func (api *API) GetGroupMemberList(group_id float64) (map[string]interface{}, error) {
 	return api.post("/get_group_member_list", map[string]interface{}{
 		"group_id": group_id,
 	})
 }
 
-func (api *API) ConcurrentGetGroupMemberList(group_id int) chan map[string]interface{} {
+func (api *API) ConcurrentGetGroupMemberList(group_id float64) chan map[string]interface{} {
 	c := make(chan map[string]interface{}, 1)
 	go api.concurrentPost("/get_group_member_list", map[string]interface{}{
 		"group_id": group_id,
