@@ -118,10 +118,10 @@ cat 2333
 ```
 Register方法第一个参数为命令名字，第二个为触发命令之后处理的执行的函数
 
-CatCommand:
+CatCommand:  
 第一个参数cmd为命令名字(cat)，第二个为命令之后参数(以空格分隔)，第三个CommandTriggerMan储存了发送命令的的用户信息。
 
-CommandTriggerMan:  
+CommandTriggerMan:    
 func GetOrigin() int   
 来源，目前有3种，分别是command.GROUP，command.PRIVATE，command.DISCUSS，分别为来自群组，私聊，讨论组
 
