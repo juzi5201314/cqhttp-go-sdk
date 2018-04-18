@@ -99,3 +99,36 @@ ListenGroupRequest
 */
 ```
 更多事件请看[cqhttp插件官方文档](https://cqhttp.cc/docs/3.4/#/Post)
+
+## Command
+command包可以方便开发者判断用户执行指令
+```go
+import "github.com/juzi5201314/cqhttp_go_sdk/command"
+...
+commmand.Register("cat", commmand.Executant(CatCommand))
+
+func CatCommand(cmd string, args []string, ctm command.CommandTriggerMan) {
+ctm.Reply(args[1])
+}
+/**
+对机器人私聊或者机器人存在的群聊里发送
+cat 2333
+机器人就会发送2333
+*/
+```
+Register方法第一个参数为命令名字，第二个为触发命令之后处理的执行的函数
+
+CatCommand:
+第一个参数cmd为命令名字(cat)，第二个为命令之后参数(以空格分隔)，第三个CommandTriggerMan储存了发送命令的的用户信息。
+
+CommandTriggerMan:
+func GetOrigin() int
+来源，目前有3种，分别是command.GROUP，command.PRIVATE，command.DISCUSS，分别为来自群组，私聊，讨论组
+func GetOriginId() float64
+如果是来自群组与讨论组，此项为群号与讨论组号。如果来自私聊，此项则为对方qq号。
+func GetId() float64
+触发命令的qq号
+func GetMessageId() float64
+返回信息id，用于在需要时撤回消息
+func Reply(string, Api)
+用与快速回复对方
