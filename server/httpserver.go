@@ -1,10 +1,11 @@
 package server
 
 import (
+	"encoding/json"
+	"github.com/juzi5201314/cqhttp_go_sdk/command"
+	"io/ioutil"
 	"net/http"
 	"strconv"
-	"io/ioutil"
-	"encoding/json"
 )
 
 func StartListenServer(port int, path string) ListenServer {
@@ -27,8 +28,17 @@ func (s *ListenServer) Listen() {
 		switch m["post_type"] {
 		case "message":
 			rm = s.listener.onMessage(m)
+			if b, ok := rm["stop"]; ok && b.(bool) {
+				break
+			}
+			cs := command.Excision(m["message"].(string))
+			go command.Exec(cs[0], cs, m)
 		case "event":
 			rm = s.listener.onEvent(m)
+			break
+		case "request":
+			rm = s.listener.onRequest(m)
+			break
 		}
 
 		if rm == nil || len(rm) < 1 {
