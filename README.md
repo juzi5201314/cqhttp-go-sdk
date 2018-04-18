@@ -121,14 +121,18 @@ Register方法第一个参数为命令名字，第二个为触发命令之后处
 CatCommand:
 第一个参数cmd为命令名字(cat)，第二个为命令之后参数(以空格分隔)，第三个CommandTriggerMan储存了发送命令的的用户信息。
 
-CommandTriggerMan:
-func GetOrigin() int
+CommandTriggerMan:  
+func GetOrigin() int   
 来源，目前有3种，分别是command.GROUP，command.PRIVATE，command.DISCUSS，分别为来自群组，私聊，讨论组
-func GetOriginId() float64
+
+func GetOriginId() float64  
 如果是来自群组与讨论组，此项为群号与讨论组号。如果来自私聊，此项则为对方qq号。
-func GetId() float64
+
+func GetId() float64  
 触发命令的qq号
-func GetMessageId() float64
+
+func GetMessageId() float64  
 返回信息id，用于在需要时撤回消息
-func Reply(string, Api)
+
+func Reply(string, Api)  
 用与快速回复对方
