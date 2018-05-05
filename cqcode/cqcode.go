@@ -125,7 +125,9 @@ func Command(str string) (cmd string, args []string) {
 	} else {
 		cmd = strs[0]
 	}
-	args = strs[1:]
+	for _, arg := range strs[1:] {
+		args = append(args, strings.Trim(arg, "\"'"))
+	}
 	return
 }
 
