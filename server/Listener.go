@@ -31,7 +31,7 @@ func (el *EventListener) onMessage(m map[string]interface{}) map[string]interfac
 			return el.private_message(m["sub_type"].(string), m["message_id"].(float64), m["user_id"].(float64), m["message"].(string), m["font"].(float64))
 		}
 		break
-	case "grouop":
+	case "group":
 		if el.group_message != nil {
 			return el.group_message(m["sub_type"].(string), m["message_id"].(float64), m["group_id"].(float64), m["user_id"].(float64), m["anonymous"].(string), m["anonymous_flag"].(string), m["message"].(string), m["font"].(float64))
 		}
