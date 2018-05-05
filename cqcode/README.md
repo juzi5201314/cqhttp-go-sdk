@@ -49,6 +49,9 @@ func pm(sub_type string, message_id float64, user_id float64, message string, fo
 ```go
 func pm(sub_type string, message_id float64, user_id float64, message string, font float64) map[string]interface{} {
 
+	// 命令必须以 "/" 开头，并且解析时自动去掉 "/"，默认为 false
+	cqcode.StrictCommand = true
+
 	// 如果上报格式为 string 可以使用静态方法
 	if !cqcode.IsCommand(m.(string)) {
 		return map[string]interface{}{}

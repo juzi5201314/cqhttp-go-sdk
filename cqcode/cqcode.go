@@ -8,6 +8,8 @@ import (
 	"regexp"
 )
 
+var StrictCommand = false
+
 type Message []MessageSegment
 
 type MessageSegment struct {
@@ -104,7 +106,7 @@ func IsCommand(str string) bool {
 	if len(str) == 0 {
 		return false
 	}
-	if str[:1] != "/" {
+	if StrictCommand && str[:1] != "/" {
 		return false
 	}
 	return true
@@ -112,10 +114,17 @@ func IsCommand(str string) bool {
 
 func Command(str string) (cmd string, args []string) {
 	strs := regexp.MustCompile(`'.*?'|".*?"|\S*\[CQ:.*?\]\S*|\S+`).FindAllString(str, -1)
-	if len(strs) == 0 || len(strs[0]) == 0 || strs[0][:1] != "/" {
+	if len(strs) == 0 || len(strs[0]) == 0 {
 		return
 	}
-	cmd = strs[0][1:]
+	if StrictCommand {
+		if strs[0][:1] != "/" {
+			return
+		}
+		cmd = strs[0][1:]
+	} else {
+		cmd = strs[0]
+	}
 	args = strs[1:]
 	return
 }
