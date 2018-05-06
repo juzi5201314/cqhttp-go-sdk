@@ -27,7 +27,7 @@ func TestMessageSegment_ParseMedia(t *testing.T) {
 
 func TestParseMessageFromString(t *testing.T) {
 
-	str := "heym[CQ:at,qq=123456][CQ:face,id=14] \nSee this awesome image, [CQ:image,file=1.jpg] Isn't it cool? [CQ:shake]\n"
+	str := "&#91;he&#44;ym[CQ:at,qq=123&#44;456][CQ:face,id=14] \nSee this awesome image, [CQ:image,file=1.jpg] Isn't it cool? [CQ:shake]\n"
 
 	mes, err := ParseMessageFromString(str)
 
@@ -39,7 +39,7 @@ func TestParseMessageFromString(t *testing.T) {
 
 	jsonstr := string(res)
 
-	if string(res) == `[{"type":"text","data":{"text":"heym"}},{"type":"at","data":{"qq":"123456"}},{"type":"face","data":{"id":"14"}},{"type":"text","data":{"text":" \nSee this awesome image, "}},{"type":"image","data":{"file":"1.jpg"}},{"type":"text","data":{"text":" Isn't it cool? "}},{"type":"shake","data":{}},{"type":"text","data":{"text":"\n"}}]` {
+	if string(res) == `[{"type":"text","data":{"text":"[he,ym"}},{"type":"at","data":{"qq":"123,456"}},{"type":"face","data":{"id":"14"}},{"type":"text","data":{"text":" \nSee this awesome image, "}},{"type":"image","data":{"file":"1.jpg"}},{"type":"text","data":{"text":" Isn't it cool? "}},{"type":"shake","data":{}},{"type":"text","data":{"text":"\n"}}]` {
 		t.Log("Decode text passed")
 	} else {
 		t.Errorf("Decode text failed: %v", jsonstr)

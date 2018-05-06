@@ -67,7 +67,7 @@ func ParseMessageFromString(str string) (Message, error) {
 			seg := MessageSegment{
 				Type: "text",
 				Data: map[string]interface{}{
-					"text": str[i:cqc[0]],
+					"text": DecodeCQCodeText(str[i:cqc[0]]),
 				},
 			}
 			message = append(message, seg)
@@ -84,7 +84,7 @@ func ParseMessageFromString(str string) (Message, error) {
 		seg := MessageSegment{
 			Type: "text",
 			Data: map[string]interface{}{
-				"text": str[i:],
+				"text": DecodeCQCodeText(str[i:]),
 			},
 		}
 		message = append(message, seg)
@@ -181,7 +181,7 @@ func NewMessageSegmentFromCQCode(str string) (MessageSegment, error) {
 			if len(kvstrs) == 0 {
 				continue
 			}
-			seg.Data[kvstrs[0]] = strings.Join(kvstrs[1:], "=")
+			seg.Data[kvstrs[0]] = DecodeCQCodeText(strings.Join(kvstrs[1:], "="))
 		}
 	}
 	return seg, nil
