@@ -113,6 +113,9 @@ func IsCommand(str string) bool {
 }
 
 func Command(str string) (cmd string, args []string) {
+	str = strings.Replace(str, `\\`, `\0x5c`, -1)
+	str = strings.Replace(str, `\"`, `\0x22`, -1)
+	str = strings.Replace(str, `\'`, `\0x27`, -1)
 	strs := regexp.MustCompile(`'.*?'|".*?"|\S*\[CQ:.*?\]\S*|\S+`).FindAllString(str, -1)
 	if len(strs) == 0 || len(strs[0]) == 0 {
 		return
@@ -126,7 +129,11 @@ func Command(str string) (cmd string, args []string) {
 		cmd = strs[0]
 	}
 	for _, arg := range strs[1:] {
-		args = append(args, strings.Trim(arg, "\"'"))
+		arg = strings.Trim(arg, `'"`)
+		arg = strings.Replace(arg, `\0x27`, `'`, -1)
+		arg = strings.Replace(arg, `\0x22`, `"`, -1)
+		arg = strings.Replace(arg, `\0x5c`, `\`, -1)
+		args = append(args, arg)
 	}
 	return
 }

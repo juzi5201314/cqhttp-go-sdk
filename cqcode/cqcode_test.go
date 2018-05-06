@@ -124,7 +124,7 @@ func TestCommand(t *testing.T) {
 	m.Append(&face)
 
 	text = Text{
-		Text: ` arg1 'a r g 2' "a r g 3" argemoji`,
+		Text: ` arg1 'a \'r g 2' "a \"r \\\"g 3\\" argemoji`,
 	}
 
 	m.Append(&text)
@@ -153,7 +153,7 @@ func TestCommand(t *testing.T) {
 
 	jsonstr := string(res)
 
-	if cmd == "[CQ:face,id=170]" && jsonstr == `["arg1","a r g 2","a r g 3","argemoji[CQ:emoji,id=10086]","arg5"]` {
+	if cmd == "[CQ:face,id=170]" && jsonstr == `["arg1","a 'r g 2","a \"r \\\"g 3\\","argemoji[CQ:emoji,id=10086]","arg5"]` {
 		t.Log("Good command")
 	} else {
 		t.Errorf("Parse command failed: %v", jsonstr)
