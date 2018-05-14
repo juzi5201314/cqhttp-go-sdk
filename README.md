@@ -1,7 +1,5 @@
 # cqhttp-go-sdk
 
-> 感谢 @rikakomoe 提交的2个pr，我前段时间沉迷学♂习所以没上过gayhub嘤嘤嘤
-
 本项目为酷 Q 的 CoolQ HTTP API 插件的 Golang SDK，封装了 web server 相关的代码，让 Gopher 能方便地开发插件。仅支持插件 3.0.0 或更新版本。
 
 关于 CoolQ HTTP API 插件，见 [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api)。
@@ -59,14 +57,80 @@ func main() {
 而得益于 go 强大的并发能力，如果是并发版本，5 条信息几乎是同时发送的。
 
 ## CQ码
-```go
-import "github.com/juzi5201314/cqhttp-go-sdk/cq"
 
+[![GoDoc](https://godoc.org/github.com/juzi5201314/cqhttp-go-sdk/cqcode?status.svg)](https://godoc.org/github.com/juzi5201314/cqhttp-go-sdk/cqcode)
+
+有关 CQ 码请参考 [酷Q官方CQ码说明](https://d.cqp.me/Pro/CQ码) 以及 [cq-http插件说明](https://cqhttp.cc/docs/3.4/#/CQCode)
+
+解码消息
+
+```go
+func pm(sub_type string, message_id float64, user_id float64, message string, font float64) map[string]interface{} {
+
+	message, err := cqcode.ParseMessage(message)
+	if err != nil {
+		return map[string]interface{}{}
+	}
+
+	for _, m := range message {
+
+		switch x := m.(type) {
+		case *cqcode.Image:
+			fmt.Print(x.FileID)
+		}
+
+	}
+	...
+}
+```
+
+编码消息
+
+```go
 ...
-    cq.At(123456789) //返回一个字符串 [CQ:at,qq=123456789]
+	m := cqcode.NewMessage()
+
+	face := cqcode.Face{
+		FaceID: 170,
+	}
+	m.Append(&face)
+
+	// 如果消息上报格式为 string 则转换为 string
+	messageStr := m.CQString()
+	// 如果为 array 则转换为 []MessageSegment
+	messageSegments := m.MessageSegments()
 ...
 ```
-更多 CQ 码请参考 [酷Q官方CQ码说明](https://d.cqp.me/Pro/CQ码) 以及 [cq-http插件说明](https://cqhttp.cc/docs/3.4/#/CQCode)
+
+命令解析
+
+```go
+func pm(sub_type string, message_id float64, user_id float64, message string, font float64) map[string]interface{} {
+
+	// 命令必须以 "/" 开头，并且解析时自动去掉 "/"，默认为 false
+	cqcode.StrictCommand = true
+
+	// 如果上报格式为 string 可以使用静态方法
+	if !cqcode.IsCommand(m.(string)) {
+		return map[string]interface{}{}
+	}
+	cmd, args := cqcode.Command(m.(string))
+
+	// 或者先解码为 Message
+	m, err := cqcode.ParseMessage(message)
+	if err != nil {
+		return map[string]interface{}{}
+	}
+	if !m.IsCommand() {
+		return map[string]interface{}{}
+	}
+	cmd, args := m.Command()
+
+	// cmd string, args []string
+	// 注意：cmd 和 args 仍然为富媒体，可以使用 ParseMessage 解析
+	...
+}
+```
 
 ## webserver
 ```go

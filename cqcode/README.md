@@ -1,6 +1,6 @@
 ## CQ码
 
-[![GoDoc](https://godoc.org/github.com/rikakomoe/cqhttp-go-sdk/cqcode?status.svg)](https://godoc.org/github.com/rikakomoe/cqhttp-go-sdk/cqcode)
+[![GoDoc](https://godoc.org/github.com/juzi5201314/cqhttp-go-sdk/cqcode?status.svg)](https://godoc.org/github.com/juzi5201314/cqhttp-go-sdk/cqcode)
 
 有关 CQ 码请参考 [酷Q官方CQ码说明](https://d.cqp.me/Pro/CQ码) 以及 [cq-http插件说明](https://cqhttp.cc/docs/3.4/#/CQCode)
 
