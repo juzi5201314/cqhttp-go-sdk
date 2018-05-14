@@ -116,7 +116,7 @@ func Command(str string) (cmd string, args []string) {
 	str = strings.Replace(str, `\\`, `\0x5c`, -1)
 	str = strings.Replace(str, `\"`, `\0x22`, -1)
 	str = strings.Replace(str, `\'`, `\0x27`, -1)
-	strs := regexp.MustCompile(`'.*?'|".*?"|\S*\[CQ:.*?\]\S*|\S+`).FindAllString(str, -1)
+	strs := regexp.MustCompile(`'[\s\S]*?'|"[\s\S]*?"|\S*\[CQ:[\s\S]*?\]\S*|\S+`).FindAllString(str, -1)
 	if len(strs) == 0 || len(strs[0]) == 0 {
 		return
 	}
@@ -279,6 +279,7 @@ func (s *Sface) FunctionName() string {
 // Image
 type Image struct {
 	FileID string `cq:"file"`
+	URL    string `cq:"url"`
 }
 
 func (i *Image) FunctionName() string {
@@ -288,6 +289,7 @@ func (i *Image) FunctionName() string {
 type Record struct {
 	FileID string `cq:"file"`
 	Magic  bool   `cq:"magic"`
+	URL    string `cq:"url"`
 }
 
 func (r *Record) FunctionName() string {

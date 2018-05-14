@@ -99,7 +99,7 @@ func TestMessageSegment_CQString(t *testing.T) {
 
 	ts := seg.CQString()
 
-	if f == "[CQ:record,file=/data/audio/&#91;&#44;&#93;&amp;,magic=false]" && s == "[CQ:shake]" && ts == "&#91;,&#93;&amp;" {
+	if f == "[CQ:record,file=/data/audio/&#91;&#44;&#93;&amp;,magic=false,url=]" && s == "[CQ:shake]" && ts == "&#91;,&#93;&amp;" {
 		t.Log("Format CQString passed")
 	} else {
 		t.Errorf("Format CQString failed: %v %v %v", f, s, ts)
@@ -124,7 +124,9 @@ func TestCommand(t *testing.T) {
 	m.Append(&face)
 
 	text = Text{
-		Text: ` arg1 'a \'r g 2' "a \"r \\\"g 3\\" argemoji`,
+		Text: ` arg1 'a \'r 
+g 2' "a \"r \\\"g 3\\" arg4
+argemoji`,
 	}
 
 	m.Append(&text)
@@ -141,6 +143,12 @@ func TestCommand(t *testing.T) {
 
 	m.Append(&text)
 
+	music := Music{
+		Content: "Alice\nLove\nBob",
+	}
+
+	m.Append(&music)
+
 	StrictCommand = true
 
 	if !m.IsCommand() {
@@ -153,7 +161,7 @@ func TestCommand(t *testing.T) {
 
 	jsonstr := string(res)
 
-	if cmd == "[CQ:face,id=170]" && jsonstr == `["arg1","a 'r g 2","a \"r \\\"g 3\\","argemoji[CQ:emoji,id=10086]","arg5"]` {
+	if cmd == "[CQ:face,id=170]" && jsonstr == `["arg1","a 'r \ng 2","a \"r \\\"g 3\\","arg4","argemoji[CQ:emoji,id=10086]","arg5[CQ:music,type=,id=,url=,audio=,title=,content=Alice\nLove\nBob,image=]"]` {
 		t.Log("Good command")
 	} else {
 		t.Errorf("Parse command failed: %v", jsonstr)
