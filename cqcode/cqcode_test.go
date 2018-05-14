@@ -5,6 +5,70 @@ import (
 	"encoding/json"
 )
 
+func TestCQString(t *testing.T)  {
+	message := NewMessage()
+
+	rec := Record{
+		FileID: "/data/audio/[,]&",
+		Magic:  false,
+	}
+
+	message = append(message, &rec)
+
+	shake := Shake{}
+
+	message = append(message, &shake)
+
+	text := Text{
+		Text: "[,]&",
+	}
+
+	message = append(message, &text)
+
+	str := message.CQString()
+
+	if str == "[CQ:record,file=/data/audio/&#91;&#44;&#93;&amp;,magic=false,url=][CQ:shake]&#91;,&#93;&amp;" {
+		t.Log("Format CQ string passed")
+	} else {
+		t.Errorf("Format CQ string failed: %v", str)
+	}
+}
+
+func TestParseCQCode(t *testing.T) {
+
+	var text Text
+	var face Face
+	data := make([]interface{}, 0)
+
+
+	cq1 := "&#91;he&#44;ym"
+
+	err := ParseCQCode(cq1, &text)
+	data = append(data, err)
+	err = ParseCQCode(cq1, &face)
+	data = append(data, err.Error())
+
+	cq2 := "[CQ:face,id=14]"
+
+	err = ParseCQCode(cq2, &text)
+	data = append(data, err.Error())
+	err = ParseCQCode(cq2, &face)
+	data = append(data, err)
+
+	data = append(data, face.FaceID)
+
+	res, _ := json.Marshal(data)
+
+	jsonstr := string(res)
+
+	if jsonstr == `[null,"invalid cqcode","wrong media type",null,14]` {
+		t.Log("Parse CQCode passed")
+	} else {
+		t.Errorf("Parse CQCode failed: %v", jsonstr)
+	}
+
+}
+
 func TestMessageSegment_ParseMedia(t *testing.T) {
 
 	seg := MessageSegment{
@@ -39,7 +103,7 @@ func TestParseMessageFromString(t *testing.T) {
 
 	jsonstr := string(res)
 
-	if string(res) == `[{"type":"text","data":{"text":"[he,ym"}},{"type":"at","data":{"qq":"123,456"}},{"type":"face","data":{"id":"14"}},{"type":"text","data":{"text":" \nSee this awesome image, "}},{"type":"image","data":{"file":"1.jpg"}},{"type":"text","data":{"text":" Isn't it cool? "}},{"type":"shake","data":{}},{"type":"text","data":{"text":"\n"}}]` {
+	if string(res) == `[{"Text":"[he,ym"},{"QQ":"123,456"},{"FaceID":14},{"Text":" \nSee this awesome image, "},{"FileID":"1.jpg","URL":""},{"Text":" Isn't it cool? "},{},{"Text":"\n"}]` {
 		t.Log("Decode text passed")
 	} else {
 		t.Errorf("Decode text failed: %v", jsonstr)
@@ -66,7 +130,7 @@ func TestMessage_Append(t *testing.T) {
 
 	jsonstr := string(res)
 
-	if string(res) == `[{"type":"music","data":{"audio":"","content":"","id":"","image":"","title":"","type":"custom","url":"http://localhost:8080"}}]` {
+	if string(res) == `[{"Type":"custom","MusicID":"","ShareURL":"http://localhost:8080","AudioURL":"","Title":"","Content":"","Image":""}]` {
 		t.Log("Append music passed")
 	} else {
 		t.Errorf("Append music failed: %v", jsonstr)
@@ -76,18 +140,9 @@ func TestMessage_Append(t *testing.T) {
 
 func TestMessageSegment_CQString(t *testing.T) {
 
-	rec := Record{
-		FileID: "/data/audio/[,]&",
-		Magic:  false,
-	}
-
-	seg, _ := NewMessageSegment(&rec)
-
-	f := seg.CQString()
-
 	shake := Shake{}
 
-	seg, _ = NewMessageSegment(&shake)
+	seg, _ := NewMessageSegment(&shake)
 
 	s := seg.CQString()
 
@@ -99,10 +154,10 @@ func TestMessageSegment_CQString(t *testing.T) {
 
 	ts := seg.CQString()
 
-	if f == "[CQ:record,file=/data/audio/&#91;&#44;&#93;&amp;,magic=false,url=]" && s == "[CQ:shake]" && ts == "&#91;,&#93;&amp;" {
+	if s == "[CQ:shake]" && ts == "&#91;,&#93;&amp;" {
 		t.Log("Format CQString passed")
 	} else {
-		t.Errorf("Format CQString failed: %v %v %v", f, s, ts)
+		t.Errorf("Format CQString failed: %v %v", s, ts)
 	}
 
 }
@@ -111,11 +166,11 @@ func TestCommand(t *testing.T) {
 
 	m := NewMessage()
 
-	text := Text{
+	text1 := Text{
 		Text: "/",
 	}
 
-	m.Append(&text)
+	m.Append(&text1)
 
 	face := Face{
 		FaceID: 170,
@@ -123,13 +178,13 @@ func TestCommand(t *testing.T) {
 
 	m.Append(&face)
 
-	text = Text{
+	text2 := Text{
 		Text: ` arg1 'a \'r 
 g 2' "a \"r \\\"g 3\\" arg4
 argemoji`,
 	}
 
-	m.Append(&text)
+	m.Append(&text2)
 
 	emoji := Emoji{
 		EmojiID: 10086,
@@ -137,11 +192,11 @@ argemoji`,
 
 	m.Append(&emoji)
 
-	text = Text{
+	text3 := Text{
 		Text: ` arg5`,
 	}
 
-	m.Append(&text)
+	m.Append(&text3)
 
 	music := Music{
 		Content: "Alice\nLove\nBob",

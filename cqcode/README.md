@@ -1,5 +1,7 @@
 ## CQ码
 
+[![GoDoc](https://godoc.org/github.com/rikakomoe/cqhttp-go-sdk/cqcode?status.svg)](https://godoc.org/github.com/rikakomoe/cqhttp-go-sdk/cqcode)
+
 有关 CQ 码请参考 [酷Q官方CQ码说明](https://d.cqp.me/Pro/CQ码) 以及 [cq-http插件说明](https://cqhttp.cc/docs/3.4/#/CQCode)
 
 解码消息
@@ -7,19 +9,16 @@
 ```go
 func pm(sub_type string, message_id float64, user_id float64, message string, font float64) map[string]interface{} {
 
-	m, err := cqcode.ParseMessage(message)
+	message, err := cqcode.ParseMessage(message)
 	if err != nil {
 		return map[string]interface{}{}
 	}
 
-	for _, seg := range m {
+	for _, m := range message {
 
-		switch seg.Type {
-		case "image":
-			var image cqcode.Image
-			seg.ParseMedia(&image)
-
-			fmt.Print(image.FileID)
+		switch x := m.(type) {
+		case *cqcode.Image:
+			fmt.Print(x.FileID)
 		}
 
 	}
@@ -39,8 +38,9 @@ func pm(sub_type string, message_id float64, user_id float64, message string, fo
 	m.Append(&face)
 
 	// 如果消息上报格式为 string 则转换为 string
-	// 如果为 array 则直接使用 m 即可
 	messageStr := m.CQString()
+	// 如果为 array 则转换为 []MessageSegment
+	messageSegments := m.MessageSegments()
 ...
 ```
 
