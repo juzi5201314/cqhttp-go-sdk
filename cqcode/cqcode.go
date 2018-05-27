@@ -3,13 +3,13 @@
 package cqcode
 
 import (
-	"strings"
+	"fmt"
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
-	"regexp"
-	"fmt"
 	"reflect"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 // StrictCommand indicates that whether a command must start with "/".
@@ -64,7 +64,7 @@ func decode(input, output interface{}) error {
 }
 
 // NewMessage returns an empty Message.
-func NewMessage() (Message) {
+func NewMessage() Message {
 	return make(Message, 0)
 }
 
@@ -99,7 +99,7 @@ func ParseMessage(msg interface{}) (Message, error) {
 // API response JSON.
 func ParseMessageSegmentsFromArray(msg interface{}) ([]MessageSegment, error) {
 	segs := make([]MessageSegment, 0)
-	err := decode(msg, segs)
+	err := decode(msg, &segs)
 	return segs, err
 }
 
@@ -233,6 +233,10 @@ func ParseMessageFromMessageSegments(segs []MessageSegment) Message {
 			rich := Rich{}
 			seg.ParseMedia(&rich)
 			message = append(message, &rich)
+		case "hb":
+			hb := RedPack{}
+			seg.ParseMedia(&hb)
+			message = append(message, &hb)
 		default:
 			s := seg
 			message = append(message, &s)
@@ -344,7 +348,7 @@ func (seg *MessageSegment) ParseMedia(media Media) error {
 }
 
 // ParseMedia parses a CQEncoded string to a specified type of Media.
-func ParseCQCode(str string, media Media) (error) {
+func ParseCQCode(str string, media Media) error {
 	l := len(str)
 	if l <= 5 || str[:4] != "[CQ:" || str[len(str)-1:] != "]" {
 		// Invalid CQCode
@@ -413,24 +417,40 @@ func FormatCQCode(media Media) string {
 		text := EncodeCQText(v.Text)
 		return text
 	default:
-		rv := reflect.ValueOf(v)
-		rv = reflect.Indirect(rv)
-		if rv.Kind() != reflect.Struct {
-			return ""
-		}
+		values := make([]interface{}, 0)
+		values = append(values, v)
 		strs := make([]string, 0)
 		strs = append(strs, v.FunctionName())
-		for i := 0; i < rv.NumField(); i++ {
-			f := rv.Type().Field(i)
-			k := f.Tag.Get("cq")
-			if k == "" {
-				k = f.Name
+		for {
+			if len(values) == 0 {
+				break
 			}
-			text := fmt.Sprint(rv.Field(i))
-			text = EncodeCQCodeText(text)
-			kvs := fmt.Sprintf("%s=%s", k, text)
-			strs = append(strs, kvs)
+			rv := reflect.ValueOf(values[0])
+			rv = reflect.Indirect(rv)
+			rt := rv.Type()
+			values = values[1:]
+			if rv.Kind() != reflect.Struct {
+				continue
+			}
+			for i := 0; i < rv.NumField(); i++ {
+				frv := rv.Field(i)
+				frt := rt.Field(i)
+				if frt.Anonymous {
+					values = append(values, frv.Interface())
+					continue
+				}
+				f := rv.Type().Field(i)
+				k := f.Tag.Get("cq")
+				if k == "" {
+					k = f.Name
+				}
+				text := fmt.Sprint(frv)
+				text = EncodeCQCodeText(text)
+				kvs := fmt.Sprintf("%s=%s", k, text)
+				strs = append(strs, kvs)
+			}
 		}
+
 		str := strings.Join(strs, ",")
 		str = fmt.Sprintf("[CQ:%s]", str)
 		return str
@@ -588,6 +608,11 @@ func (s *Share) FunctionName() string {
 
 // 位置
 type Location struct {
+	Content   string  `cq:"content"` // 详细地址
+	Latitude  float64 `cq:"lat"`
+	Longitude float64 `cq:"lon"`
+	Style     int     `cq:"style"` // 不知道是什么
+	Title     string  `cq:"title"`
 }
 
 func (l *Location) FunctionName() string {
@@ -596,6 +621,7 @@ func (l *Location) FunctionName() string {
 
 // 厘米秀
 type Show struct {
+	ID int `cq:"id"`
 }
 
 func (s *Show) FunctionName() string {
@@ -604,10 +630,22 @@ func (s *Show) FunctionName() string {
 
 // 签到
 type Sign struct {
+	Image    string `cq:"image"` // URL of cover image
+	Location string `cq:"location"`
+	Title    string `cq:"title"`
 }
 
 func (s *Sign) FunctionName() string {
 	return "sign"
+}
+
+// 红包
+type RedPack struct {
+	Title string `cq:"title"`
+}
+
+func (rp *RedPack) FunctionName() string {
+	return "hb"
 }
 
 // 其他富媒体
