@@ -1,6 +1,6 @@
 # cqhttp-go-sdk
 
-# 腾讯再次打压qq机器人，相关仓库归档。呵呵，国内企业。
+# 酷q已经停止更新
 
 
 本项目为酷 Q 的 CoolQ HTTP API 插件的 Golang SDK，封装了 web server 相关的代码，让 Gopher 能方便地开发插件。仅支持插件 3.0.0 或更新版本。
